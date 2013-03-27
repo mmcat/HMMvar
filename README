@@ -1,0 +1,152 @@
+== HMMvar1.0
+
+-- Input
+
+1. cDNA query sequence
+
+2. necleotide variants
+
+format for cDNA query sequence file: Fasta, e.x.
+> seq1
+ATGGAGGAGCCGCAGTCAGATCCTAGCGTCGAGCCCCCTCTGAGTCAGGAAACATTTTCA
+GACCTATGGAAACTACTTCCTGAAAACAACGTTCTGTCCCCCTTGCCGTCCCAAGCAATG
+
+format for necleotide variants file: The following is an example of an input variant file
+
+GA/T	4
+CC/-	10
+GCA/AT	12
+...
+
+Two fields: The first field is a representative of a variant (major allele/minor allele) 
+and the second filed is the location of the variant.
+
+-- Prerequirements
+
+1. NCBI Blast 2.2.27+ (http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) 
+
+2. NCBI nr database (ftp://ftp.ncbi.nlm.nih.gov/blast/db/)
+
+3. HMMER3 (http://hmmer.janelia.org/)
+
+4. MUSCLE aligner (http://www.drive5.com/muscle/)
+
+-- Installation
+
+Make suer that all the prerequired packages have been installed properly. Download and extract HMMvar package to a local directory.
+
+$ tar -xzvf HMMvar1.0.tar.gz 
+
+1. configure	
+	$./configure
+
+2. complile
+	$make
+
+3. install
+	$make install
+
+If you receive an error during configuration that psiblast, blastdbcmd,
+muscle or HMM cannot be found, and you have indeed installed it, then place
+it in your PATH variable, or specify its location:
+
+e.g.)
+	
+	$ ./configure PSIBLAST=/path/to/psiblast
+	$ ./configure MUSCLE=/path/to/muscle
+	$ ./configure HMM = /path/to/hmm/
+	$ ./configure BLASTDBCMD = /path/to/blastdbcmd
+	$ ./configure PSIBLAST=/path/to/psiblast MUSCLE=/path/to/muscle HMM = /path/to/hmm/ BLASTDBCMD=/path/to/blastdbcmd
+
+-- Setting
+
+If you did not specify the location of NCBI nr database during installation, 
+then you may edit Common.h file in the source folder or set it via programming option.
+      
+You can also change the path to psiblast, blastdbcmd, muscle or hmm in a
+similar way if you want to use different version.
+
+        e.g.)
+        BLAST_DB="/path/to/blast/database/nr"
+        PSIBLAST="/path/to/psiblast"
+        BLASTDBCMD="/path/to/blastdbcmd"
+        MUSCLE="/path/to/muscle"
+        HMMPATH="/path/to/hmm"
+
+-- Running 
+
+1. If the options are not input correctly, the HMMvar usage instructions will show:
+
+USAGE:
+  hmmVar [Options]
+
+Options:
+  -q <string>
+  -d <string>
+  -v <string>
+  --psiblastcmd <string>
+  --musclecmd <string>
+  --hmmercmd <string>
+  --blastdbcmd <string>
+  --subject_sequence <string>
+
+2. Run HMMvar with tested example:
+Set pathes for blastdb, blastdbcmd, psiblast, muscle and hmmpath in Common.h file,
+
+#define BLASTDB "~/blast/db/nr"
+#define BLASTDBCMD "/usr/local/ncbi/blast/bin/blastdbcmd"
+#define PSIBLAST "/usr/local/ncbi/blast/bin/psiblast"
+#define MUSCLE "/usr/local/bin/muscle"
+#define HMMPATH "/usr/local/bin/"
+
+then install HMMvar. 
+
+If install the programming successfully, run it as follows:
+
+$hmmVar -q data/tp53_cDNA.fa -v data/tp53_simu.var
+
+<following contents are output to the terminal>
+
+[17:08:27] loading query sequence from a FASTA file...
+[17:08:27] searching related sequences...
+[17:20:50] filtering related sequences...
+[17:20:53] making multiple sequence alignment...
+MUSCLE v3.8.31 by Robert C. Edgar
+
+http://www.drive5.com/muscle
+This software is donated to the public domain.
+Please cite: Edgar, R.C. Nucleic Acids Res 32(5), 1792-97.
+
+subject_file_tmp 854 seqs, max length 408, avg  length 193
+00:00:01    17 MB(-2%)  Iter   1  100.00%  K-bit distance matrix
+00:00:02  122 MB(-15%)  Iter   1  100.00%  Align node           
+00:00:02  122 MB(-16%)  Iter   1  100.00%  Root alignment
+[17:20:55] build hidden Markov model...
+# hmmbuild :: profile HMM construction from multiple sequence alignments
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# input alignment file:             /tmp/hmmVarJVCFtp/align_out_stockholm
+# output HMM file:                  /tmp/hmmVarJVCFtp/hmm_out_tmp
+# input alignment is asserted as:   protein
+# number of worker threads:         10
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# idx name                  nseq  alen  mlen eff_nseq re/pos description
+#---- -------------------- ----- ----- ----- -------- ------ -----------
+1     align_out_stockholm    184   430   392     2.38  0.590 
+
+# CPU time: 0.66u 0.00s 00:00:00.66 Elapsed: 00:00:00.67
+[17:20:56] maching hidden Markov model...
+[17:20:56] maching hidden Markov model...
+[17:20:56] maching hidden Markov model...
+done!
+
+3. After running the program, you will get a output file called hmmVar.out 
+containing variants information and the corresponding scores 
+at the current directory. for example, 
+
+G/T     4       1.799
+G/-     7       0.998
+...
