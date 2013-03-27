@@ -105,7 +105,7 @@ If install the programming successfully, run it as follows:
 
 $hmmVar -q data/tp53_cDNA.fa -v data/tp53_simu.var
 
-<following contents are output to the terminal>
+<following contents are outputs to the terminal>
 
 [17:08:27] loading query sequence from a FASTA file...
 [17:08:27] searching related sequences...
