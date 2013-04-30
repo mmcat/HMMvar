@@ -19,7 +19,7 @@ GCA/AT	12
 ...
 
 Two fields: The first field is a representative of a variant (major allele/minor allele) 
-and the second filed is the location of the variant.
+and the second filed is the coordinat of the variant (starts with 1).
 
 -- Prerequirements
 
