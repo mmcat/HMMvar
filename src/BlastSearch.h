@@ -2,7 +2,7 @@
  * blastSearch.h
  *
  *  Created on: Feb 16, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef BLASTSEARCH_H_
@@ -16,9 +16,9 @@ using namespace std;
 
 class blastSearch{
 public:
-	blastSearch(string blast_query,string blast_output,string subject_seqs,string path);
+	blastSearch(string blast_query,string blast_output,string subject_seqs,string blastout_save_name,string path);
 	virtual ~blastSearch();
-
+    string blastout_save_file_name_ ;
 	string blast_output_file_name_;
 //	string blast_db_name_;
 	string blast_query_file_name_;

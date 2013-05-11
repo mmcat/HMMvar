@@ -2,7 +2,7 @@
  * Variant.h
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef VARIANT_H_
@@ -18,11 +18,10 @@ public:
 	virtual ~variant();
 	string varinat_str_;
 	string variant_id_;
-	double wt_proba_;
-	double mt_proba_;
-	double odds_;
-
-
+	string set_id_;
+//	double wt_proba_;
+//	double mt_proba_;
+//	double odds_;
 
 	int pos;
 

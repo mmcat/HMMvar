@@ -2,7 +2,7 @@
  * multiAlign.h
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef MULTIALIGN_H_
@@ -16,7 +16,7 @@ using namespace std;
 
 class MultiAlign{
 public:
-	MultiAlign(string path);
+	MultiAlign(string path,string alignout_save_name);
 	virtual ~MultiAlign();
 
 //	string align_input_file_name_;
@@ -25,6 +25,7 @@ public:
 	string align_output_file_fasta_;
 	string align_output_file_stockholm_;
 	string output_path_;
+        string alignout_save_file_name_;
 
 //	void setParameters(string input,string output);
 	int make_multi_align(string muscle_cmd,string align_input_file, string align_output_file);

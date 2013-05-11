@@ -2,7 +2,7 @@
  * variant.cpp
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include "variant.h"

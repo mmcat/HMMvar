@@ -16,33 +16,34 @@
 
 using namespace std;
 
-
 int main(int argc, char** argv){
-	double cutoff = 0.90;    //cutoff for selecting homologous sequences
+
 	Option opt;
 	opt.SetOptions(argc,argv);
-
-
 
 	ScoreVar score;
     score.SetQuerySequenceFromFastaFile(opt.query_file_name_.c_str(),opt.query_file_name_);
 
     Sequence wtaa;
-    int type=1;
+    int type=1;        //different type of codeon table
+// step 1: find seed protein (query protein sequence)
     score.translate(score.query_seq_, &wtaa,type);
     string wtaa_query_file_name=score.tmp_dir_+"/query_aa_file_wt";
     wtaa.Print(wtaa_query_file_name);
-	blastSearch blast(wtaa_query_file_name, opt.blast_output_file_name_,opt.subject_sequences_file_name_,score.tmp_dir_);
-	blast.searchHomoSeq(opt.blastdb_file_name_,opt.psiblast_command_);
+// step 2: search for homologous sequences by psiblast
+	blastSearch blast(wtaa_query_file_name, opt.blast_output_file_name_,opt.subject_sequences_file_name_,opt.save_blastout_,score.tmp_dir_);
+//	blast.searchHomoSeq(opt.blastdb_file_name_,opt.psiblast_command_);
 
-	MultiAlign align(score.tmp_dir_);
-    if (score.setHomoseq(opt.blastdbcmd_command_,opt.blastdb_file_name_,blast.subject_sequences_file_name_,blast.blast_output_file_name_,cutoff)!=-1 &&
-	align.make_multi_align(opt.muscle_command_,blast.subject_sequences_file_name_,opt.muscle_output_file_name_)!=-1)
+// step 3: make multiple sequence alignment (MSA)
+	MultiAlign align(score.tmp_dir_,opt.save_muscle_);
+    if (score.setHomoseq(opt.blastdbcmd_command_,opt.blastdb_file_name_,blast.subject_sequences_file_name_,blast.blast_output_file_name_,CUTOFF)!=-1 \
+    		&& align.make_multi_align(opt.muscle_command_,blast.subject_sequences_file_name_,opt.muscle_output_file_name_)!=-1)
 
     	align.fasta2stockholm(align.align_output_file_fasta_);
 
 
-    score.getVariants(opt.variants_file_name_);
+    score.getVariants(opt.variants_file_name_);  // get the mutation (alleles and positions)
+// step 4&5: make hidden markov model and scoring
 	score.getScore(opt.hmmer_command_,wtaa_query_file_name,align.align_output_file_stockholm_);
 
 	cout<<"done!"<<endl;

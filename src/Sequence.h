@@ -2,7 +2,7 @@
  * Sequence.h
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef SEQUENCE_H_

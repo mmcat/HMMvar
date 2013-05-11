@@ -2,7 +2,7 @@
  * Sequence.cpp
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 #include "Sequence.h"
 
@@ -23,7 +23,7 @@ void Sequence::Print(string& filename){
 
 
 	FILE* fp = fopen(filename.c_str(),"w");
-	fprintf(fp,"%s%s\n",this->def_.c_str(),this->seq_.c_str());
+	fprintf(fp,"%s\n%s\n",this->def_.c_str(),this->seq_.c_str());
 	fclose(fp);
 }
 
@@ -48,7 +48,8 @@ bool Sequence::SetSequenceFromFastaFile(const char* id, string filename){
 
 			if (buf[0] == '>') {
 				// def line
-				def_.assign(buf, 100);
+				strptr = strtok(buf,"\n");
+				def_.assign(strptr, 100);
 			} else {
 				strptr = strtok(buf, " \r\n");
 				if (strptr == NULL)

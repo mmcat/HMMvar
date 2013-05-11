@@ -2,7 +2,7 @@
  * scoreVar.cpp
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include <string>
@@ -48,6 +48,7 @@ void ScoreVar::translate(const Sequence& nt, Sequence* aa,int type){
 	aa->def_ = nt.def_;
 	string seqaa;
 	string seqnt = nt.seq_;
+        if(seqnt.empty()) {fprintf(stderr,"the sequence is empty\n");return;}
 	transform(seqnt.begin(),seqnt.end(),seqnt.begin(), ::tolower);
 	replace(seqnt.begin(),seqnt.end(),'u','t');
 	set_Codeon();
@@ -71,9 +72,11 @@ void ScoreVar::translate(const Sequence& nt, Sequence* aa,int type){
 
 int ScoreVar::getScore(string hmm_path,string wtaa_file_name,string multi_align_file){
 
+
 	if(hmm_output_file_name_.empty()){
 		hmm_output_file_name_ = "/hmm_out_tmp";
 	}
+
 	buildHMM(hmm_path,multi_align_file);
 //	string query_seq_aa;
 //	this->nt2aa(query_seq_.seq_, &query_seq_aa);
@@ -87,21 +90,26 @@ int ScoreVar::getScore(string hmm_path,string wtaa_file_name,string multi_align_
 		exit(-1);
 	}
 
-	if(score_out_file_name_.empty()) score_out_file_name_ = "hmmVar.out";
+	if(score_out_file_name_.empty()) score_out_file_name_ = variant_file_name_+".out";
 	FILE* fp=fopen(score_out_file_name_.c_str(),"w");
-	for(vector< variant >::iterator it = variants_.begin(); it!=variants_.end();it++){
+
+	for(map<string,vector<variant> >::iterator it = variants_.begin(); it!=variants_.end();it++){
 		Sequence mut_seq_nt,mut_seq_aa;
-		this->getMutantSeqFromVariants(*it,&mut_seq_nt);
+		this->getMutantSeqFromVariantsSet(it->second,&mut_seq_nt);
+                if(mut_seq_nt.seq_.empty()){fprintf(fp,"%s\t%.3f\n",it->first.c_str(),999.0);continue;}
 		translate(mut_seq_nt,&mut_seq_aa,1);
 		string mut_aa_file_name=tmp_dir_+"/query_aa_file_mt";
 		mut_seq_aa.Print(mut_aa_file_name);
 		double bs_mut = searchHMM(hmm_path,mut_aa_file_name);
-		it->mt_proba_ = null_pro*exp(bs_mut*CONST_LOG2/INTSCALE);
-		it->wt_proba_ = pro_wild;
-		it->odds_ = getOdds(pro_wild,it->mt_proba_);
-		fprintf(fp,"%s\t%d\t%.3f\n",it->varinat_str_.c_str(),it->pos,it->odds_);
+		double mt_proba = null_pro*exp(bs_mut*CONST_LOG2/INTSCALE);
+//		it->wt_proba_ = pro_wild;
+//		double odds = getOdds(pro_wild,mt_proba);
+		double diffs = getDiffs(bs_wild,bs_mut);
+		fprintf(fp,"%s\t%.3f\n",it->first.c_str(),diffs);
 
 	}
+
+
 
 	fclose(fp);
 
@@ -110,19 +118,33 @@ int ScoreVar::getScore(string hmm_path,string wtaa_file_name,string multi_align_
 }
 
 int ScoreVar::getVariants(string filename){
-
+        variant_file_name_ = filename;
 	FILE* fp = fopen(filename.c_str(),"r");
 	if(fp==NULL){printf("Cannot find variants file:No such file!\n");return -1;}
 	char buffer[BUF_SIZE_MED];
 	char *a;
+	int rn = 0;
 	while(fgets(buffer,BUF_SIZE_MED,fp)!=NULL){
+		rn++;
 		variant var;
 		a = strtok(buffer,"\t\n ");
+		var.set_id_ = string(a);
+		a = strtok(NULL,"\t\n");
 		var.varinat_str_ = string(a);
 		a = strtok(NULL,"\t\n ");
+		if(!a) {printf("Error: File format is not correct at row %d: %s\n",rn,filename.c_str());exit(0);}
 		var.pos = atof(a);
 		var.variant_id_ = this->query_seq_.id_;
-		variants_.push_back(var);
+		if(variants_.find(var.set_id_)==variants_.end()){
+			vector<variant> var_set;
+			var_set.push_back(var);
+			variants_.insert(pair<string,vector<variant> >(var.set_id_,var_set));
+		}
+		else{
+			variants_[var.set_id_].push_back(var);
+
+		}
+
 		}
 
 	return 0;
@@ -143,10 +165,45 @@ void ScoreVar::getMutantSeqFromVariants(variant var, Sequence* mut_seq){
 	if(w.compare(s)!=0){
 		printf("Warning:The variant %s %d is not match with the sequence! Please check the variant.\n", var.varinat_str_.c_str(),var.pos);
 	}
-	if(m[0]=='_') mut_seq->seq_.erase(var.pos-1,w.size());
+	if(m[0]=='-') mut_seq->seq_.erase(var.pos-1,w.size());
 	else
 		mut_seq->seq_.replace(var.pos-1,w.size(),m);
 
+}
+
+bool myComp(variant var1,variant var2){
+	return var1.pos<var2.pos;
+}
+
+void ScoreVar::getMutantSeqFromVariantsSet(vector<variant> &var, Sequence* mut_seq){
+	mut_seq->id_ = query_seq_.id_;
+	mut_seq->def_ = query_seq_.def_;
+	string str= query_seq_.seq_;
+	sort(var.begin(),var.end(),myComp);
+	int start = 0;
+	for(vector<variant>::iterator it=var.begin();it!=var.end();++it){
+		string::size_type pos = it->varinat_str_.find('/');
+		if(pos==string::npos){printf("Error: Variant format is not correct:%s\n",it->varinat_str_.c_str());exit(0);}
+		string w = it->varinat_str_.substr(0,pos);
+		string m = it->varinat_str_.substr(pos+1);
+		string s = query_seq_.seq_.substr(it->pos-1,w.size());
+		if(w.compare(s)!=0&&w!="-"){
+				printf("Warning:The variant %s %d is not match with the sequence! Please check the variant.\n", it->varinat_str_.c_str(),it->pos);
+			}
+		else {
+			string seg = str.substr(start,it->pos-start-1);
+			if(w=="-" && m!="-"){
+				seg = str.substr(start,it->pos-start);
+				mut_seq->seq_.append(seg+m);
+			}
+			else if(w!="-" && m=="-") mut_seq->seq_.append(seg);
+			else mut_seq->seq_.append(seg+m);
+			start = it->pos+w.length()-1;
+
+		}
+
+	}
+	mut_seq->seq_.append(str.substr(start));
 }
 
 
@@ -155,6 +212,10 @@ double ScoreVar::getOdds(double p1,double p2){
 	if(p2==0 || p1==1) return 999;
 	else return p1*(1-p2)/p2*(1-p1);
 
+}
+
+double ScoreVar::getDiffs(double b1,double b2){
+	return b1-b2;
 }
 int ScoreVar::buildHMM(string hmm_path,string multi_align_file){
 	char hmmbuild_cmd[BUF_SIZE_MED];
@@ -194,6 +255,7 @@ double ScoreVar::searchHMM(string hmm_path,string aa_file_name){
 	fgets(buf,BUF_SIZE_MED,PIPE);
 	str = strtok(buf, " \r\n");
 	str = strtok(NULL," \r\n");
+        pclose(PIPE);
 	if(str==NULL) return 0;
 	return atof(str);
 }

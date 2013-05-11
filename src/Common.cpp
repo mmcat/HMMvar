@@ -2,7 +2,7 @@
  * Common.cpp
  *
  *  Created on: Feb 16, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include <time.h>

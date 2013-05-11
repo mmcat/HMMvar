@@ -2,7 +2,7 @@
  * Option.h
  *
  *  Created on: Feb 18, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef OPTION_H_
@@ -16,9 +16,11 @@ public:
 	Option();
 	virtual ~Option();
 
-	int flag_save_blastout_;
-	int flag_save_muscle_;
-	int flag_save_hmmer_;
+	string save_blastout_;
+	string save_muscle_;
+	string save_hmmer_;
+
+
 
 	string blast_output_file_name_;
 	string psiblast_command_;

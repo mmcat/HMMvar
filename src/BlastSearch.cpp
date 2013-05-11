@@ -2,14 +2,15 @@
  * blastSearch.cpp
  *
  *  Created on: Feb 16, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include <stdio.h>
 
 #include "BlastSearch.h"
 
-blastSearch::blastSearch(string blast_query,string blast_output,string subject_seqs,string path){
+blastSearch::blastSearch(string blast_query,string blast_output,string subject_seqs,string blastout_save_name,string path){
+	    blastout_save_file_name_ = blastout_save_name;
 	    blast_query_file_name_ = blast_query;
 	    blast_output_file_name_ = blast_output;
 	    subject_sequences_file_name_ = subject_seqs;
@@ -61,6 +62,16 @@ int blastSearch::runBlast(string blastdb_file_name,string psiblast_cmd) {
 		fprintf(stderr, "psiblast failed (exit:%d)\n", return_code);
 		exit(-1);
 	}
+	if (!blastout_save_file_name_.empty()) {
+					char cp_command[BUF_SIZE_MED];
+					sprintf(cp_command, "cp %s %s", blast_output_file_name_.c_str(), blastout_save_file_name_.c_str());
+					// will replace system
+					int ret;
+					ret = system(cp_command);
+					if (ret != 0) {
+						fprintf(stderr, "saving blastout file failed (%d)\n", ret);
+					}
+				}
 
 
 	return 0;

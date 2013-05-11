@@ -16,6 +16,7 @@
 #define P1 350./351
 #define CONST_LOG2 0.69314718055994529
 #define INTSCALE 1000.0
+#define CUTOFF 0.9
 
 #define BLASTDB "/research/mingming/ncbi-blast-2.2.26+/db/nr"
 #define BLASTDBCMD "~/bin/blastdbcmd"

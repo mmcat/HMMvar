@@ -2,7 +2,7 @@
  * multiAlign.cpp
  *
  *  Created on: Feb 17, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include <string>
@@ -15,8 +15,9 @@
 
 using namespace std;
 
-MultiAlign::MultiAlign(string path){
+MultiAlign::MultiAlign(string path,string alignout_save_name){
 	output_path_ = path;
+        alignout_save_file_name_ = alignout_save_name;
 
 }
 
@@ -47,6 +48,16 @@ int MultiAlign::runMuscle(string muscle_cmd,string align_input_file){
 				exit(-1);
 
 	}
+	if (!alignout_save_file_name_.empty()) {
+					char cp_command[BUF_SIZE_MED];
+					sprintf(cp_command, "cp %s %s", align_output_file_fasta_.c_str(), alignout_save_file_name_.c_str());
+					// will replace system
+					int ret;
+					ret = system(cp_command);
+					if (ret != 0) {
+						fprintf(stderr, "saving blastout file failed (%d)\n", ret);
+					}
+				}
 	return 0;
 }
 

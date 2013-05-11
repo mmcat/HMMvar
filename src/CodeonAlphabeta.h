@@ -2,7 +2,7 @@
  * CodeonAlphabeta.h
  *
  *  Created on: Mar 8, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #ifndef CODEONALPHABETA_H_

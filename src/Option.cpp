@@ -2,7 +2,7 @@
  * Option.cpp
  *
  *  Created on: Feb 18, 2013
- *      Author: Mingming Liu
+ *      Author: mingmingliu
  */
 
 #include "Option.h"
@@ -26,11 +26,6 @@ char usage[] =
 
 
 Option::Option(){
-	flag_save_blastout_ = 0;
-	flag_save_muscle_ = 0;
-	flag_save_hmmer_ = 0;
-
-
 }
 
 Option::~Option(){
@@ -54,7 +49,7 @@ int Option::SetOptions(int argc, char** argv){
 					{"save_hmmerout",required_argument,0,7},
 					{"hmmercmd",required_argument, 0, 8},
 
-					{"subject_sequence",required_argument,0,9}
+					{"subject_sequence",required_argument,0,9},
 
 			};
 			/* getopt_long stores the option index here. */
@@ -73,7 +68,7 @@ int Option::SetOptions(int argc, char** argv){
 						blast_output_file_name_ = optarg;
 						break;
 					case 2:
-						flag_save_blastout_ = 1;
+						save_blastout_ = optarg;
 						break;
 					case 3:
 						psiblast_command_ = optarg;
@@ -82,13 +77,13 @@ int Option::SetOptions(int argc, char** argv){
 						blastdbcmd_command_ = optarg;
 						break;
 					case 5:
-						flag_save_muscle_ = 1;
+						save_muscle_ = optarg;
 						break;
 					case 6:
 						muscle_command_ = optarg;
 						break;
 					case 7:
-						flag_save_hmmer_=1;
+						save_hmmer_=optarg;
 						break;
 					case 8:
 						hmmer_command_ = optarg;
