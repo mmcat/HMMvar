@@ -19,9 +19,9 @@ format for necleotide variants file: The following is an example of an input var
 ...
 
 Three fields: The first fied is the group number of a variant, by which we are able to score multiple variants within the
-same group. The second field is a representative of a variant (major allele/minor allele). 
-The second filed is the coordinat of the variant (starts with 1). You can also add additional columns following these three
-fields for your convenince. However, these three columns must be the first three columns as have the format and order as stated.
+same group. The second field is a representative of a variant (major allele/minor allele). The second filed is the 
+coordinat of the variant (starts with 1). You can also add additional columns following these threefields for your 
+convenince. However, these three columns must be the first three columns as have the format and order as stated.
 
 
 -- Prerequirements
