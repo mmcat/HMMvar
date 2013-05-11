@@ -13,13 +13,16 @@ GACCTATGGAAACTACTTCCTGAAAACAACGTTCTGTCCCCCTTGCCGTCCCAAGCAATG
 
 format for necleotide variants file: The following is an example of an input variant file
 
-GA/T	4
-CC/-	10
-GCA/AT	12
+1	GA/T	4
+2	CC/-	10
+1	GCA/AT	12
 ...
 
-Two fields: The first field is a representative of a variant (major allele/minor allele) 
-and the second filed is the coordinat of the variant (starts with 1).
+Three fields: The first fied is the group number of a variant, by which we are able to score multiple variants within the
+same group. The second field is a representative of a variant (major allele/minor allele). 
+The second filed is the coordinat of the variant (starts with 1). You can also add additional columns following these three
+fields for your convenince. However, these three columns must be the first three columns as have the format and order as stated.
+
 
 -- Prerequirements
 
