@@ -1,8 +1,21 @@
 /*
- * HmmVar.cpp
+ * Copyright (C) 2013 Virginia Tech
+
+ * This file is part of HMMvar. HMMvar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Created on: Feb 16, 2013
- *      Author: Mingming Liu
+ * Name: hmmVar.cpp
+ * Author: Mingming Liu
  */
 
 
@@ -32,7 +45,7 @@ int main(int argc, char** argv){
     wtaa.Print(wtaa_query_file_name);
 // step 2: search for homologous sequences by psiblast
 	blastSearch blast(wtaa_query_file_name, opt.blast_output_file_name_,opt.subject_sequences_file_name_,opt.save_blastout_,score.tmp_dir_);
-//	blast.searchHomoSeq(opt.blastdb_file_name_,opt.psiblast_command_);
+	blast.searchHomoSeq(opt.blastdb_file_name_,opt.psiblast_command_);
 
 // step 3: make multiple sequence alignment (MSA)
 	MultiAlign align(score.tmp_dir_,opt.save_muscle_);
