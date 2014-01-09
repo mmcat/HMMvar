@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	ScoreVar score;
     score.SetQuerySequenceFromFastaFile(opt.query_file_name_.c_str(),opt.query_file_name_);
 
-    Sequence wtaa;
+    Sequence wtaa;     // wild type amino acid
     int type=1;        //different type of codeon table
     string wtaa_query_file_name;
 // step 1: find seed protein (query protein sequence)
