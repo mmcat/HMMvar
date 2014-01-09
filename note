@@ -1,0 +1,17 @@
+Major parts:
+
+1. Search for homologous sequences of query protein sequence (psiblast)
+
+classes involved: search (blast search, blast output file parser), variant (features: sequence, variants,etc), sequence (features: sequence,etc;functions:searchHomo),etc.
+
+2. Multiple sequences alignments (Muscle)
+
+classes involved: seqAlign,
+
+3. Scoring (HMMER3)
+
+classes involved: scoreVariant 
+
+4. Drivering
+
+file involved: HmmVar.cpp   
