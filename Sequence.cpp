@@ -62,8 +62,9 @@ bool Sequence::SetSequenceFromFastaFile(const char* id, string filename){
 
 			if (buf[0] == '>') {
 				// def line
-				strptr = strtok(buf,"\n");
-				def_.assign(strptr, 100);
+				strptr = strtok(buf," \r\n");
+//				def_.assign(strptr, 100);
+				def_ = string(strptr);
 			} else {
 				strptr = strtok(buf, " \r\n");
 				if (strptr == NULL)

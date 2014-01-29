@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
+#include <fstream>
 #include <unistd.h>
 
 #include "ScoreVar.h"
@@ -389,6 +390,10 @@ int ScoreVar::CreateFastaFileUsingBlastdbcmd(string blastdb_cmd,string blastdb,s
 				subject_seq_file_name.c_str()
 				);
 		system(blastdbcmd);
+
+		ofstream fout(subject_seq_file_name.c_str(),ios::app);
+		fout<<query_seq_.def_<<"\n"<<query_seq_.seq_;
+		fout.close();
 
 	return 0;
 }

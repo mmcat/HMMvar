@@ -47,6 +47,8 @@ int main(int argc, char** argv){
     if(opt.seq_type_ != "" && opt.seq_type_=="prot"){
     	wtaa_query_file_name = opt.query_file_name_;
     	score.seq_type_ = "prot";
+    	wtaa = Sequence();
+    	wtaa.SetSequenceFromFastaFile(wtaa_query_file_name.c_str(),wtaa_query_file_name);
     }
     else{
     	score.translate(score.query_seq_, &wtaa,type);
