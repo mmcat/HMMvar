@@ -29,7 +29,7 @@
 #define P1 350./351
 #define CONST_LOG2 0.69314718055994529
 #define INTSCALE 1000.0
-#define CUTOFF 0.9
+#define CUTOFF 0.8
 
 #define BLASTDB "~/blast/db/nr"
 #define BLASTDBCMD "/usr/local/ncbi/blast/bin/blastdbcmd"

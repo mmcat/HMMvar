@@ -35,7 +35,7 @@ ScoreVar::ScoreVar(){
 }
 
 ScoreVar::~ScoreVar(){
-	if (!tmp_dir_.empty()) {
+/*	if (!tmp_dir_.empty()) {
 			char rm_temp_dir_command[BUF_SIZE_MED];
 			sprintf(rm_temp_dir_command, "rm -rf %s", tmp_dir_.c_str());
 			int ret;
@@ -43,7 +43,7 @@ ScoreVar::~ScoreVar(){
 			if (ret != 0) {
 				fprintf(stderr, "removing temporary directory failed (%d)\n", ret);
 			}
-		}
+		}*/
 
 }
 
